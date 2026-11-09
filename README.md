@@ -52,6 +52,33 @@ Kotlin, Jetpack Compose, Material 3, single activity with a hand-written back st
 4. Connect an Android phone via USB/Wireless Debugging or launch an emulator running Android 7.0 (API level 24) or newer.
 5. Click Run 'app' and allow notification permissions when prompted on Android 13+.
 
+## Reminder schedule
+
+FarmLedger automatically generates milestone management reminders based on the project type and start date:
+
+### Poultry Schedule
+| Day | Scheduled Task |
+|---|---|
+| Day 7 | Newcastle (ND/IB) vaccine |
+| Day 14 | Gumboro vaccine |
+| Day 21 | Newcastle booster |
+| Day 35 | Expected selling date |
+
+### Goats Schedule
+| Day | Scheduled Task |
+|---|---|
+| Day 14 | Deworming |
+| Day 30 | Vaccination check |
+| Day 90 | Repeat deworming |
+
+### Garden Schedule
+| Day | Scheduled Task |
+|---|---|
+| Day 14 | Spraying |
+| Day 75 | Expected harvest |
+
+*Note: The above schedules serve as standard management guidelines and should be confirmed with a local veterinarian or agricultural extension officer.*
+
 ## Research Note
 
 ### 1. Local database with Room
@@ -84,7 +111,12 @@ Farmers risk significant financial loss when livestock health, vaccination, or d
 I learned WorkManager implementation from the official Android documentation on [Persistent background tasks with WorkManager](https://developer.android.com/develop/background-work/background-tasks/persistent), the [Schedule tasks with WorkManager](https://developer.android.com/codelabs/basic-android-kotlin-compose-workmanager) Codelab, and the [Notification permissions guide](https://developer.android.com/develop/ui/views/notifications/notification-permission).
 
 #### What went wrong and how I fixed it
-(to be completed after the Reminders step)
+- Notifications are disabled by default on Android 13+ (API 33+), so I requested the POST_NOTIFICATIONS runtime permission on app startup; if the user refuses, background notifications are skipped gracefully while the in-app Reminders list still displays all reminders.
+- Overdue reminders for an older project would all fire background notifications at once if scheduled with zero delay. I fixed it by checking the calendar day index before scheduling; past-day reminders are not enqueued in WorkManager and instead display in red with an "(Overdue)" label on screen.
+- Deleting a project removes its reminder rows from SQLite due to foreign key CASCADE rules, but the scheduled WorkManager background jobs remained active in the system scheduler. I fixed it by explicitly calling cancelUniqueWork("reminder-$id") for each of the project's reminders prior to executing the database delete operation.
+
+#### Why WorkManager and not AlarmManager
+WorkManager automatically persists scheduled background work to its internal database and reschedules tasks after device reboots. In contrast, AlarmManager exact alarms require special system permissions, are cancelled on device shutdown, and can drain device battery. WorkManager's initial delay provides a minimum execution window rather than an exact-second alarm, which is ideal for "due today" agricultural reminders.
 
 ### Sources
 

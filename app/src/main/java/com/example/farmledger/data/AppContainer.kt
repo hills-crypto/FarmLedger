@@ -9,15 +9,17 @@ interface AppContainer {
 
 // Default implementation of AppContainer that initializes the Room database and constructs FarmRepository.
 class DefaultAppContainer(private val context: Context) : AppContainer {
-    // Lazy initialization of the central FarmRepository using database DAOs.
+    // Lazy initialization of the central FarmRepository using database DAOs and WorkManager scheduler.
     override val farmRepository: FarmRepository by lazy {
         val database = FarmDatabase.getDatabase(context)
+        val scheduler = ReminderScheduler(context.applicationContext)
         FarmRepository(
             projectDao = database.projectDao(),
             ledgerDao = database.ledgerDao(),
             customerDao = database.customerDao(),
             paymentDao = database.paymentDao(),
-            reminderDao = database.reminderDao()
+            reminderDao = database.reminderDao(),
+            reminderScheduler = scheduler
         )
     }
 }

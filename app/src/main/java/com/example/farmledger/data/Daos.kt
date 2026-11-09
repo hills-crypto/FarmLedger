@@ -153,6 +153,10 @@ interface ReminderDao {
     @Query("SELECT * FROM reminders WHERE projectId = :projectId ORDER BY dueDate ASC")
     fun getForProject(projectId: Long): Flow<List<Reminder>>
 
+    // One-shot fetch of project reminders used prior to project deletion.
+    @Query("SELECT * FROM reminders WHERE projectId = :projectId")
+    suspend fun getForProjectOnce(projectId: Long): List<Reminder>
+
     // Retrieves the next three upcoming reminders for the dashboard summary.
     @Query("SELECT * FROM reminders WHERE isDone = 0 ORDER BY dueDate ASC LIMIT 3")
     fun getNextThree(): Flow<List<Reminder>>

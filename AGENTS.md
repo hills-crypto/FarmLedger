@@ -97,7 +97,7 @@ Cream #FAF7EF, Alert Red #B3261E. Dynamic colour off.
 - [x] Step 4: Add Project + Dashboard (real).
 - [x] Step 5: Project Details + Add Transaction with validation.
 - [x] Step 6: Customers & Debts + Record Payment.
-- [ ] Step 7: Reminders + WorkManager notifications.
+- [x] Step 7: Reminders + WorkManager notifications.
 - [ ] Step 8: Test the demo journey (Mr Banda: 50 birds, K7,500 credit, pays K5,000 → balance K2,500), write README.md, final push to GitHub, submit the repository link.
 
 Update the checkboxes as steps are completed.

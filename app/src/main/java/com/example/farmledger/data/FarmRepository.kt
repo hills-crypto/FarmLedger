@@ -1,6 +1,7 @@
 package com.example.farmledger.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 // Single repository class wrapping all DAOs to provide data access for ViewModels.
 class FarmRepository(
@@ -8,7 +9,8 @@ class FarmRepository(
     private val ledgerDao: LedgerDao,
     private val customerDao: CustomerDao,
     private val paymentDao: PaymentDao,
-    private val reminderDao: ReminderDao
+    private val reminderDao: ReminderDao,
+    private val reminderScheduler: ReminderScheduler
 ) {
     // Project operations
     // Retrieves all active farm projects ordered by start date.
@@ -20,13 +22,14 @@ class FarmRepository(
     // Inserts a new project into the database.
     suspend fun insertProject(project: Project): Long = projectDao.insert(project)
 
-    // Inserts a new project into the database and automatically generates its standard reminders.
+    // Inserts a new project into the database and automatically generates its standard scheduled reminders.
     suspend fun saveProjectWithReminders(project: Project): Long {
         val projectId = projectDao.insert(project)
         val savedProject = project.copy(id = projectId)
         val reminders = ReminderSchedule.remindersFor(savedProject)
         for (reminder in reminders) {
-            reminderDao.insert(reminder)
+            val reminderId = reminderDao.insert(reminder)
+            reminderScheduler.schedule(reminderId, reminder.title, project.name, reminder.dueDate)
         }
         return projectId
     }
@@ -34,8 +37,14 @@ class FarmRepository(
     // Updates an existing project.
     suspend fun updateProject(project: Project) = projectDao.update(project)
 
-    // Deletes a project from the database.
-    suspend fun deleteProject(project: Project) = projectDao.delete(project)
+    // Cancels background reminder notifications and deletes a project from the database.
+    suspend fun deleteProject(project: Project) {
+        val reminders = reminderDao.getForProjectOnce(project.id)
+        for (reminder in reminders) {
+            reminderScheduler.cancel(reminder.id)
+        }
+        projectDao.delete(project)
+    }
 
     // Ledger transaction operations
     // Retrieves all ledger entries for a project ordered newest first.
@@ -91,6 +100,33 @@ class FarmRepository(
     // Reminder operations
     // Inserts a reminder and returns its database ID.
     suspend fun insertReminder(reminder: Reminder): Long = reminderDao.insert(reminder)
+
+    // Marks a reminder as done in the database and cancels its WorkManager notification job.
+    suspend fun markReminderDone(reminder: Reminder) {
+        reminderDao.update(reminder.copy(isDone = true))
+        reminderScheduler.cancel(reminder.id)
+    }
+
+    // Creates and schedules a new custom user reminder.
+    suspend fun addCustomReminder(projectId: Long, title: String, dueDateMs: Long): Long {
+        val project = projectDao.getById(projectId).firstOrNull()
+        val projectName = project?.name ?: "Farm Project"
+        val reminder = Reminder(
+            projectId = projectId,
+            title = title.trim(),
+            dueDate = dueDateMs,
+            isDone = false,
+            isCustom = true
+        )
+        val reminderId = reminderDao.insert(reminder)
+        reminderScheduler.schedule(reminderId, reminder.title, projectName, dueDateMs)
+        return reminderId
+    }
+
+    // Enqueues a test notification scheduled for 15 seconds in the future.
+    fun scheduleTestNotification() {
+        reminderScheduler.scheduleTest()
+    }
 
     // Updates an existing reminder.
     suspend fun updateReminder(reminder: Reminder) = reminderDao.update(reminder)
