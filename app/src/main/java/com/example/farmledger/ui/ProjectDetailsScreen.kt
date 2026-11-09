@@ -138,7 +138,23 @@ fun ProjectDetailsScreen(
                         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Text("Category: $displayCategoryName", style = MaterialTheme.typography.bodyLarge)
                             Text("Started: ${formatDate(project.startDate)}", style = MaterialTheme.typography.bodyMedium)
-                            Text("Budget: ${formatCurrency(project.budget)}", style = MaterialTheme.typography.bodyMedium)
+
+                            val budget = project.budget
+                            val spent = uiState.totalExpenses
+                            if (spent > budget) {
+                                val over = spent - budget
+                                Text(
+                                    text = "Budget ${formatCurrency(budget)} · Spent ${formatCurrency(spent)} · Over budget by ${formatCurrency(over)}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color(0xFFB3261E)
+                                )
+                            } else {
+                                val left = budget - spent
+                                Text(
+                                    text = "Budget ${formatCurrency(budget)} · Spent ${formatCurrency(spent)} · Left ${formatCurrency(left)}",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
                         }
                     }
                 }
@@ -159,14 +175,19 @@ fun ProjectDetailsScreen(
                             val isProfit = uiState.profit >= 0.0
                             val profitColor = if (isProfit) Color(0xFF2E6B3A) else Color(0xFFB3261E)
                             Text(
-                                text = "Profit/Loss: ${formatCurrency(uiState.profit)}",
+                                text = profitLabel(uiState.profit),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = profitColor
                             )
 
+                            val remainingText = if (uiState.animalsRemaining > 0) {
+                                "Running total – ${uiState.animalsRemaining} still to sell"
+                            } else {
+                                "Final result – all sold"
+                            }
                             Text(
-                                text = "Remaining: ${uiState.animalsRemaining} of ${project.quantity}",
+                                text = remainingText,
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold
                             )

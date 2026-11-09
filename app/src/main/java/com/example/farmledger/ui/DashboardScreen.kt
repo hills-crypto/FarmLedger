@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.farmledger.data.Project
 import com.example.farmledger.data.ProjectType
 import com.example.farmledger.data.Reminder
+import kotlin.math.abs
 
 // Renders the main dashboard screen displaying project summaries, financial metrics, and upcoming reminders.
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,10 +77,12 @@ fun DashboardScreen(
                     )
 
                     val isProfitPositive = uiState.totalProfit >= 0.0
+                    val profitTitle = if (isProfitPositive) "Total Profit" else "Total Loss"
+                    val profitValue = formatCurrency(abs(uiState.totalProfit))
                     val profitColor = if (isProfitPositive) Color(0xFF2E6B3A) else Color(0xFFB3261E)
                     MetricCard(
-                        title = "Total Profit/Loss",
-                        value = formatCurrency(uiState.totalProfit),
+                        title = profitTitle,
+                        value = profitValue,
                         valueColor = profitColor,
                         modifier = Modifier.weight(1f)
                     )
