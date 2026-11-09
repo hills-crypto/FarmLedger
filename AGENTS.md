@@ -91,9 +91,9 @@ Cream #FAF7EF, Alert Red #B3261E. Dynamic colour off.
 
 ## Build progress
 - [x] Step 1: Navigation skeleton with six placeholder screens – runs on phone.
-- [x] Step 1b: Create GitHub repository and push the project (then push after every step).
+- [ ] Step 1b: Create GitHub repository and push the project (then push after every step).
 - [x] Step 2: Gradle – Room (KSP), lifecycle-viewmodel-compose, lifecycle-runtime-compose, WorkManager.
-- [ ] Step 3: Entities, DAOs, database, repository, AppContainer.
+- [x] Step 3: Entities, DAOs, database, repository, AppContainer.
 - [ ] Step 4: Add Project + Dashboard (real).
 - [ ] Step 5: Project Details + Add Transaction with validation.
 - [ ] Step 6: Customers & Debts + Record Payment.
