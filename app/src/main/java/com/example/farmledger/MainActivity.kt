@@ -5,16 +5,27 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.farmledger.ui.AddProjectScreen
+import com.example.farmledger.ui.DashboardScreen
 import com.example.farmledger.ui.theme.FarmLedgerTheme
 
-// 1. Every screen the app can show.
-//    "data object" = a screen with no extra information.
-//    "data class"  = a screen that needs to know WHICH project (projectId).
+// Represents navigation screen destinations for hand-written backstack routing.
 sealed interface Screen {
     data object Dashboard : Screen
     data object AddProject : Screen
@@ -24,6 +35,7 @@ sealed interface Screen {
     data object Reminders : Screen
 }
 
+// Main activity entry point enabling edge-to-edge layout and initializing theme content.
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +48,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// 2. The app shell: holds the back stack and decides which screen to draw.
+// App navigation shell managing the hand-written screen backstack.
 @Composable
 fun FarmLedgerApp() {
     val backStack = remember { mutableStateListOf<Screen>(Screen.Dashboard) }
@@ -78,11 +90,13 @@ fun FarmLedgerApp() {
     }
 }
 
-// 3. Temporary placeholder screens. We replace each one with the real screen later.
+// Helper composable container for rendering remaining temporary placeholder screens.
 @Composable
 fun PlaceholderScreen(title: String, content: @Composable ColumnScope.() -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(title, style = MaterialTheme.typography.headlineMedium)
@@ -90,26 +104,7 @@ fun PlaceholderScreen(title: String, content: @Composable ColumnScope.() -> Unit
     }
 }
 
-@Composable
-fun DashboardScreen(
-    onNewProject: () -> Unit,
-    onOpenProject: (Long) -> Unit,
-    onMoneyOwed: () -> Unit,
-    onReminders: () -> Unit
-) = PlaceholderScreen("Dashboard") {
-    Button(onClick = onNewProject) { Text("+ New Project") }
-    Button(onClick = { onOpenProject(1L) }) { Text("Open test project (id 1)") }
-    Button(onClick = onMoneyOwed) { Text("Money Owed") }
-    Button(onClick = onReminders) { Text("Reminders") }
-}
-
-@Composable
-fun AddProjectScreen(onSaved: () -> Unit, onCancel: () -> Unit) =
-    PlaceholderScreen("Add Project") {
-        Button(onClick = onSaved) { Text("Save") }
-        OutlinedButton(onClick = onCancel) { Text("Cancel") }
-    }
-
+// Temporary placeholder screen for Project Details.
 @Composable
 fun ProjectDetailsScreen(projectId: Long, onAddTransaction: () -> Unit, onBack: () -> Unit) =
     PlaceholderScreen("Project Details (id $projectId)") {
@@ -117,6 +112,7 @@ fun ProjectDetailsScreen(projectId: Long, onAddTransaction: () -> Unit, onBack: 
         OutlinedButton(onClick = onBack) { Text("Back") }
     }
 
+// Temporary placeholder screen for Add Transaction.
 @Composable
 fun AddTransactionScreen(projectId: Long, onSaved: () -> Unit, onCancel: () -> Unit) =
     PlaceholderScreen("Add Transaction (project $projectId)") {
@@ -124,11 +120,13 @@ fun AddTransactionScreen(projectId: Long, onSaved: () -> Unit, onCancel: () -> U
         OutlinedButton(onClick = onCancel) { Text("Cancel") }
     }
 
+// Temporary placeholder screen for Customers & Debts.
 @Composable
 fun CustomersScreen(onBack: () -> Unit) = PlaceholderScreen("Customers & Debts") {
     OutlinedButton(onClick = onBack) { Text("Back") }
 }
 
+// Temporary placeholder screen for Reminders.
 @Composable
 fun RemindersScreen(onBack: () -> Unit) = PlaceholderScreen("Reminders") {
     OutlinedButton(onClick = onBack) { Text("Back") }

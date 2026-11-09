@@ -94,7 +94,7 @@ Cream #FAF7EF, Alert Red #B3261E. Dynamic colour off.
 - [x] Step 1b: Create GitHub repository and push the project (then push after every step).
 - [x] Step 2: Gradle – Room (KSP), lifecycle-viewmodel-compose, lifecycle-runtime-compose, WorkManager.
 - [x] Step 3: Entities, DAOs, database, repository, AppContainer.
-- [ ] Step 4: Add Project + Dashboard (real).
+- [x] Step 4: Add Project + Dashboard (real).
 - [ ] Step 5: Project Details + Add Transaction with validation.
 - [ ] Step 6: Customers & Debts + Record Payment.
 - [ ] Step 7: Reminders + WorkManager notifications.

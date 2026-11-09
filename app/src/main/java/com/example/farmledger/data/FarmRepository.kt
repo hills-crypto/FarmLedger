@@ -20,6 +20,17 @@ class FarmRepository(
     // Inserts a new project into the database.
     suspend fun insertProject(project: Project): Long = projectDao.insert(project)
 
+    // Inserts a new project into the database and automatically generates its standard reminders.
+    suspend fun saveProjectWithReminders(project: Project): Long {
+        val projectId = projectDao.insert(project)
+        val savedProject = project.copy(id = projectId)
+        val reminders = ReminderSchedule.remindersFor(savedProject)
+        for (reminder in reminders) {
+            reminderDao.insert(reminder)
+        }
+        return projectId
+    }
+
     // Updates an existing project.
     suspend fun updateProject(project: Project) = projectDao.update(project)
 
