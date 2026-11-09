@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.farmledger.data.Project
+import com.example.farmledger.data.ProjectType
 import com.example.farmledger.data.Reminder
 
 // Renders the main dashboard screen displaying project summaries, financial metrics, and upcoming reminders.
@@ -183,6 +184,12 @@ private fun ReminderRow(reminder: Reminder) {
 // Displays a list item card for an individual farming project.
 @Composable
 private fun ProjectCard(project: Project, onClick: () -> Unit) {
+    val displayCategory = if (project.type == ProjectType.GARDEN && project.variety.isNotBlank()) {
+        "Garden – ${project.variety}"
+    } else {
+        project.type.toDisplayName()
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -196,7 +203,7 @@ private fun ProjectCard(project: Project, onClick: () -> Unit) {
                     .padding(top = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Type: ${project.type.toDisplayName()}", style = MaterialTheme.typography.bodyMedium)
+                Text("Type: $displayCategory", style = MaterialTheme.typography.bodyMedium)
                 Text("Started: ${formatDate(project.startDate)}", style = MaterialTheme.typography.bodySmall)
             }
             Text("Quantity: ${project.quantity}", style = MaterialTheme.typography.bodySmall)

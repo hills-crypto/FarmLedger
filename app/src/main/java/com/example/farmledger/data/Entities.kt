@@ -13,7 +13,8 @@ data class Project(
     val type: ProjectType,
     val quantity: Int,
     val startDate: Long,
-    val budget: Double
+    val budget: Double,
+    val variety: String = ""
 )
 
 // Represents an individual income or expense entry recorded for a project.

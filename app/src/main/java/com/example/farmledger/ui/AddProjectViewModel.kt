@@ -25,6 +25,9 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
     var type by mutableStateOf(ProjectType.POULTRY)
         private set
 
+    var variety by mutableStateOf("Rape")
+        private set
+
     var startDate by mutableLongStateOf(System.currentTimeMillis())
         private set
 
@@ -46,6 +49,7 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
         quantity = ""
         budget = ""
         type = ProjectType.POULTRY
+        variety = "Rape"
         startDate = System.currentTimeMillis()
         nameError = null
         quantityError = null
@@ -74,6 +78,14 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
     // Updates the selected project type.
     fun updateType(newType: ProjectType) {
         type = newType
+        if (newType == ProjectType.GARDEN && variety.isBlank()) {
+            variety = "Rape"
+        }
+    }
+
+    // Updates crop variety for garden projects.
+    fun updateVariety(newVariety: String) {
+        variety = newVariety
     }
 
     // Updates the chosen project start date timestamp.
@@ -114,7 +126,8 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
                     type = type,
                     quantity = parsedQuantity!!,
                     startDate = startDate,
-                    budget = parsedBudget!!
+                    budget = parsedBudget!!,
+                    variety = if (type == ProjectType.GARDEN) (if (variety.isBlank()) "Rape" else variety) else ""
                 )
                 repository.saveProjectWithReminders(project)
                 reset()

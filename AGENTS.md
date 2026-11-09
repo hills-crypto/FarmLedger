@@ -57,7 +57,7 @@ PDF export, charts, cloud sync. Do not add these.
 ## Database (version 1)
 | Entity | Fields |
 |---|---|
-| Project | id, name, type, quantity, startDate (Long epoch ms), budget |
+| Project | id, name, type, quantity, startDate (Long epoch ms), budget, variety |
 | LedgerEntry (table "transactions") | id, projectId, kind (EXPENSE/SALE), category, amount, quantity, date, note, paymentType (CASH/CREDIT), customerId (nullable) |
 | Customer | id, name, phone |
 | Payment | id, customerId, amount, date |
@@ -79,11 +79,59 @@ During development `fallbackToDestructiveMigration()` is acceptable.
 - Quantity sold: ≤ animals remaining → "You only have N birds left in this batch."
 Add Project: name not empty; quantity and budget positive.
 
-## Reminders
-- One `OneTimeWorkRequest` per reminder, `setInitialDelay(dueDate - now)`,
-  `enqueueUniqueWork("reminder-$id", ExistingWorkPolicy.REPLACE, ...)`; mark done → `cancelUniqueWork`.
-- Create a notification channel at startup; request `POST_NOTIFICATIONS` on Android 13+.
-- For testing, use a short delay (10–30 seconds).
+## Reminder schedule
+
+Based on common small-scale practice in Zambia; confirm with a vet or agricultural extension officer. Always follow the product label.
+
+### Poultry Schedule
+| Day | Scheduled Task |
+|---|---|
+| Day 7 | Newcastle (ND/IB) vaccine |
+| Day 14 | Gumboro vaccine |
+| Day 21 | Newcastle booster |
+| Day 35 | Expected selling date |
+
+### Goats Schedule (Day 0 = arrival / project start)
+| Day | Scheduled Task |
+|---|---|
+| Day 3 | Deworm all goats (e.g. albendazole – follow the label dose) |
+| Day 7 | Start tick control – dip or spray (e.g. amitraz); repeat every 1–2 weeks in the rainy season |
+| Day 14 | Vaccinate – pulpy kidney (enterotoxaemia) + tetanus, 1st dose |
+| Day 30 | Check and trim hooves |
+| Day 42 | Vaccinate – pulpy kidney + tetanus booster |
+| Day 93 | Deworm (every 3 months) |
+| Day 183 | Deworm (every 3 months) |
+| Day 273 | Deworm (every 3 months) |
+| Day 365 | Yearly vaccine booster (pulpy kidney + tetanus; anthrax if your vet advises) |
+
+### Garden Schedule – Rape
+| Day | Scheduled Task |
+|---|---|
+| Day 14 | Top-dress with Urea or Ammonium Nitrate |
+| Day 21 | Check for aphids and diamondback moth – spray if seen (e.g. cypermethrin; keep the pre-harvest days on the label) |
+| Day 35 | Start harvesting leaves |
+
+### Garden Schedule – Tomato
+| Day | Scheduled Task |
+|---|---|
+| Day 10 | Stake and tie the plants |
+| Day 14 | Start fungicide spray against blight (e.g. mancozeb); repeat every 7–14 days in wet weather |
+| Day 21 | Top-dress (e.g. CAN) |
+| Day 30 | Check for Tuta absoluta and whitefly – spray if seen (approved insecticide, follow the label) |
+| Day 75 | Expected first harvest |
+
+### Garden Schedule – Cabbage
+| Day | Scheduled Task |
+|---|---|
+| Day 14 | Check for diamondback moth and aphids – spray if seen (e.g. cypermethrin) |
+| Day 21 | 1st top-dress (Urea or Ammonium Nitrate) |
+| Day 42 | 2nd top-dress |
+| Day 80 | Expected harvest |
+
+### Garden Schedule – Other
+| Day | Scheduled Task |
+|---|---|
+| Day 60 | Expected harvest – add your own spray and fertiliser reminders in the Reminders screen |
 
 ## Branding
 Colours: Leaf Green #2E6B3A, Deep Green #1B4224, Harvest Gold #E8A317, Soil Brown #7A5230,

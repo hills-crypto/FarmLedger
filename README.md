@@ -54,7 +54,7 @@ Kotlin, Jetpack Compose, Material 3, single activity with a hand-written back st
 
 ## Reminder schedule
 
-FarmLedger automatically generates milestone management reminders based on the project type and start date:
+Based on common small-scale practice in Zambia; confirm with a vet or agricultural extension officer. Always follow the product label.
 
 ### Poultry Schedule
 | Day | Scheduled Task |
@@ -64,20 +64,47 @@ FarmLedger automatically generates milestone management reminders based on the p
 | Day 21 | Newcastle booster |
 | Day 35 | Expected selling date |
 
-### Goats Schedule
+### Goats Schedule (Day 0 = arrival / project start)
 | Day | Scheduled Task |
 |---|---|
-| Day 14 | Deworming |
-| Day 30 | Vaccination check |
-| Day 90 | Repeat deworming |
+| Day 3 | Deworm all goats (e.g. albendazole – follow the label dose) |
+| Day 7 | Start tick control – dip or spray (e.g. amitraz); repeat every 1–2 weeks in the rainy season |
+| Day 14 | Vaccinate – pulpy kidney (enterotoxaemia) + tetanus, 1st dose |
+| Day 30 | Check and trim hooves |
+| Day 42 | Vaccinate – pulpy kidney + tetanus booster |
+| Day 93 | Deworm (every 3 months) |
+| Day 183 | Deworm (every 3 months) |
+| Day 273 | Deworm (every 3 months) |
+| Day 365 | Yearly vaccine booster (pulpy kidney + tetanus; anthrax if your vet advises) |
 
-### Garden Schedule
+### Garden Schedule – Rape
 | Day | Scheduled Task |
 |---|---|
-| Day 14 | Spraying |
-| Day 75 | Expected harvest |
+| Day 14 | Top-dress with Urea or Ammonium Nitrate |
+| Day 21 | Check for aphids and diamondback moth – spray if seen (e.g. cypermethrin; keep the pre-harvest days on the label) |
+| Day 35 | Start harvesting leaves |
 
-*Note: The above schedules serve as standard management guidelines and should be confirmed with a local veterinarian or agricultural extension officer.*
+### Garden Schedule – Tomato
+| Day | Scheduled Task |
+|---|---|
+| Day 10 | Stake and tie the plants |
+| Day 14 | Start fungicide spray against blight (e.g. mancozeb); repeat every 7–14 days in wet weather |
+| Day 21 | Top-dress (e.g. CAN) |
+| Day 30 | Check for Tuta absoluta and whitefly – spray if seen (approved insecticide, follow the label) |
+| Day 75 | Expected first harvest |
+
+### Garden Schedule – Cabbage
+| Day | Scheduled Task |
+|---|---|
+| Day 14 | Check for diamondback moth and aphids – spray if seen (e.g. cypermethrin) |
+| Day 21 | 1st top-dress (Urea or Ammonium Nitrate) |
+| Day 42 | 2nd top-dress |
+| Day 80 | Expected harvest |
+
+### Garden Schedule – Other
+| Day | Scheduled Task |
+|---|---|
+| Day 60 | Expected harvest – add your own spray and fertiliser reminders in the Reminders screen |
 
 ## Research Note
 
@@ -125,6 +152,10 @@ WorkManager automatically persists scheduled background work to its internal dat
 - https://developer.android.com/develop/background-work/background-tasks/persistent
 - https://developer.android.com/codelabs/basic-android-kotlin-compose-workmanager
 - https://developer.android.com/develop/ui/views/notifications/notification-permission
+
+## How I used AI tools
+
+I wrote the app's specification myself in AGENTS.md: the problem, the scope, the database design, the validation rules and the reminder schedules from my own farming experience. I used Android Studio's AI agent to write code from that specification, one step at a time. After each step I reviewed the code, tested it on my phone, and found and fixed problems. For example, sales could be saved to the wrong project, a valid date was rejected, and credit sales were missing the number of birds sold. Every design decision is mine, and I can explain every file.
 
 ## Version 2 ideas
 

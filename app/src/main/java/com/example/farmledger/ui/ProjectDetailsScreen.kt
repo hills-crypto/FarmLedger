@@ -39,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.farmledger.data.EntryKind
 import com.example.farmledger.data.LedgerEntry
 import com.example.farmledger.data.PaymentType
+import com.example.farmledger.data.ProjectType
 
 // Renders the detailed metrics, reminder alerts, and transaction history for a single project.
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,10 +127,16 @@ fun ProjectDetailsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (project != null) {
+                val displayCategoryName = if (project.type == ProjectType.GARDEN && project.variety.isNotBlank()) {
+                    "Garden – ${project.variety}"
+                } else {
+                    project.type.toDisplayName()
+                }
+
                 item {
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text("Category: ${project.type.toDisplayName()}", style = MaterialTheme.typography.bodyLarge)
+                            Text("Category: $displayCategoryName", style = MaterialTheme.typography.bodyLarge)
                             Text("Started: ${formatDate(project.startDate)}", style = MaterialTheme.typography.bodyMedium)
                             Text("Budget: ${formatCurrency(project.budget)}", style = MaterialTheme.typography.bodyMedium)
                         }

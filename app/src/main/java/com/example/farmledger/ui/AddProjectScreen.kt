@@ -108,6 +108,22 @@ fun AddProjectScreen(
                 }
             }
 
+            if (viewModel.type == ProjectType.GARDEN) {
+                Text("Crop", style = MaterialTheme.typography.labelLarge)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    listOf("Rape", "Tomato", "Cabbage", "Other").forEach { crop ->
+                        FilterChip(
+                            selected = viewModel.variety == crop,
+                            onClick = { viewModel.updateVariety(crop) },
+                            label = { Text(crop) }
+                        )
+                    }
+                }
+            }
+
             OutlinedTextField(
                 value = viewModel.quantity,
                 onValueChange = viewModel::updateQuantity,

@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 // The main local Room database for storing all FarmLedger app data.
 @Database(
     entities = [Project::class, LedgerEntry::class, Customer::class, Payment::class, Reminder::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
