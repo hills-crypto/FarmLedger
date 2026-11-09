@@ -227,7 +227,7 @@ private fun TransactionRow(
         entry.category
     } else if (entry.paymentType == PaymentType.CREDIT) {
         val customerName = entry.customerId?.let { customersMap[it] } ?: ""
-        if (customerName.isNotBlank()) "Credit – $customerName" else "Credit"
+        if (customerName.isNotBlank()) "Sold ${entry.quantity} · Credit – $customerName" else "Sold ${entry.quantity} · Credit"
     } else {
         "Sold ${entry.quantity}"
     }

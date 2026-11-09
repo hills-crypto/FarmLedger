@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.farmledger.ui.AddProjectScreen
 import com.example.farmledger.ui.AddTransactionScreen
+import com.example.farmledger.ui.CustomersScreen
 import com.example.farmledger.ui.DashboardScreen
 import com.example.farmledger.ui.ProjectDetailsScreen
 import com.example.farmledger.ui.theme.FarmLedgerTheme
@@ -104,12 +105,6 @@ fun PlaceholderScreen(title: String, content: @Composable ColumnScope.() -> Unit
         Text(title, style = MaterialTheme.typography.headlineMedium)
         content()
     }
-}
-
-// Temporary placeholder screen for Customers & Debts.
-@Composable
-fun CustomersScreen(onBack: () -> Unit) = PlaceholderScreen("Customers & Debts") {
-    OutlinedButton(onClick = onBack) { Text("Back") }
 }
 
 // Temporary placeholder screen for Reminders.

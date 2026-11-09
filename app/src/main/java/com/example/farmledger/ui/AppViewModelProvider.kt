@@ -16,6 +16,9 @@ object AppViewModelProvider {
         initializer {
             DashboardViewModel(farmLedgerApplication().container.farmRepository)
         }
+        initializer {
+            CustomersViewModel(farmLedgerApplication().container.farmRepository)
+        }
     }
 
     // Returns a ViewModelProvider.Factory for ProjectDetailsViewModel parameterized by projectId.
