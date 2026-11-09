@@ -37,6 +37,9 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
     var budgetError by mutableStateOf<String?>(null)
         private set
 
+    var isSaving by mutableStateOf(false)
+        private set
+
     // Updates the input name value and clears its error message.
     fun updateName(input: String) {
         name = input
@@ -67,6 +70,8 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
 
     // Validates inputs and saves the project with generated reminders if valid.
     fun save(onSaved: () -> Unit) {
+        if (isSaving) return
+
         var isValid = true
 
         if (name.isBlank()) {
@@ -88,16 +93,21 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
 
         if (!isValid) return
 
+        isSaving = true
         viewModelScope.launch {
-            val project = Project(
-                name = name.trim(),
-                type = type,
-                quantity = parsedQuantity!!,
-                startDate = startDate,
-                budget = parsedBudget!!
-            )
-            repository.saveProjectWithReminders(project)
-            onSaved()
+            try {
+                val project = Project(
+                    name = name.trim(),
+                    type = type,
+                    quantity = parsedQuantity!!,
+                    startDate = startDate,
+                    budget = parsedBudget!!
+                )
+                repository.saveProjectWithReminders(project)
+                onSaved()
+            } finally {
+                isSaving = false
+            }
         }
     }
 }

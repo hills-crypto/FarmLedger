@@ -103,7 +103,7 @@ fun AddProjectScreen(
                     FilterChip(
                         selected = viewModel.type == type,
                         onClick = { viewModel.updateType(type) },
-                        label = { Text(type.name) }
+                        label = { Text(type.toDisplayName()) }
                     )
                 }
             }
@@ -157,6 +157,7 @@ fun AddProjectScreen(
                 }
                 Button(
                     onClick = { viewModel.save(onSaved) },
+                    enabled = !viewModel.isSaving,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Save Project")

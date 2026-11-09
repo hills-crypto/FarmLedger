@@ -1,5 +1,6 @@
 package com.example.farmledger.ui
 
+import com.example.farmledger.data.ProjectType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -13,4 +14,9 @@ fun formatCurrency(amount: Double): String {
 fun formatDate(epochMs: Long): String {
     val formatter = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
     return formatter.format(Date(epochMs))
+}
+
+// Converts ProjectType enum to user-friendly title case display name (e.g., "Poultry").
+fun ProjectType.toDisplayName(): String {
+    return name.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 }

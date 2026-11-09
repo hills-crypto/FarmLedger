@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -22,7 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.farmledger.ui.AddProjectScreen
+import com.example.farmledger.ui.AddTransactionScreen
 import com.example.farmledger.ui.DashboardScreen
+import com.example.farmledger.ui.ProjectDetailsScreen
 import com.example.farmledger.ui.theme.FarmLedgerTheme
 
 // Represents navigation screen destinations for hand-written backstack routing.
@@ -76,7 +77,8 @@ fun FarmLedgerApp() {
                 is Screen.ProjectDetails -> ProjectDetailsScreen(
                     projectId = current.projectId,
                     onAddTransaction = { goTo(Screen.AddTransaction(current.projectId)) },
-                    onBack = { goBack() }
+                    onBack = { goBack() },
+                    onDeleted = { goBack() }
                 )
                 is Screen.AddTransaction -> AddTransactionScreen(
                     projectId = current.projectId,
@@ -103,22 +105,6 @@ fun PlaceholderScreen(title: String, content: @Composable ColumnScope.() -> Unit
         content()
     }
 }
-
-// Temporary placeholder screen for Project Details.
-@Composable
-fun ProjectDetailsScreen(projectId: Long, onAddTransaction: () -> Unit, onBack: () -> Unit) =
-    PlaceholderScreen("Project Details (id $projectId)") {
-        Button(onClick = onAddTransaction) { Text("Add Transaction") }
-        OutlinedButton(onClick = onBack) { Text("Back") }
-    }
-
-// Temporary placeholder screen for Add Transaction.
-@Composable
-fun AddTransactionScreen(projectId: Long, onSaved: () -> Unit, onCancel: () -> Unit) =
-    PlaceholderScreen("Add Transaction (project $projectId)") {
-        Button(onClick = onSaved) { Text("Save") }
-        OutlinedButton(onClick = onCancel) { Text("Cancel") }
-    }
 
 // Temporary placeholder screen for Customers & Debts.
 @Composable

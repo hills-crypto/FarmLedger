@@ -8,13 +8,33 @@ import com.example.farmledger.FarmLedgerApplication
 
 // Provides factory instances for instantiating ViewModels with repository dependencies.
 object AppViewModelProvider {
-    // Factory that retrieves FarmRepository from the application container to construct ViewModels.
+    // Factory for view models that do not require navigation arguments.
     val Factory: ViewModelProvider.Factory = viewModelFactory {
         initializer {
             AddProjectViewModel(farmLedgerApplication().container.farmRepository)
         }
         initializer {
             DashboardViewModel(farmLedgerApplication().container.farmRepository)
+        }
+    }
+
+    // Returns a ViewModelProvider.Factory for ProjectDetailsViewModel parameterized by projectId.
+    fun projectDetailsFactory(projectId: Long): ViewModelProvider.Factory = viewModelFactory {
+        initializer {
+            ProjectDetailsViewModel(
+                repository = farmLedgerApplication().container.farmRepository,
+                projectId = projectId
+            )
+        }
+    }
+
+    // Returns a ViewModelProvider.Factory for AddTransactionViewModel parameterized by projectId.
+    fun addTransactionFactory(projectId: Long): ViewModelProvider.Factory = viewModelFactory {
+        initializer {
+            AddTransactionViewModel(
+                repository = farmLedgerApplication().container.farmRepository,
+                projectId = projectId
+            )
         }
     }
 }

@@ -60,7 +60,7 @@ fun DashboardScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 96.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
@@ -196,7 +196,7 @@ private fun ProjectCard(project: Project, onClick: () -> Unit) {
                     .padding(top = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Type: ${project.type.name}", style = MaterialTheme.typography.bodyMedium)
+                Text("Type: ${project.type.toDisplayName()}", style = MaterialTheme.typography.bodyMedium)
                 Text("Started: ${formatDate(project.startDate)}", style = MaterialTheme.typography.bodySmall)
             }
             Text("Quantity: ${project.quantity}", style = MaterialTheme.typography.bodySmall)
