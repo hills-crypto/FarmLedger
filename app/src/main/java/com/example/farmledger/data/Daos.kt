@@ -92,6 +92,10 @@ interface CustomerDao {
     @Query("SELECT * FROM customers WHERE id = :id")
     fun getById(id: Long): Flow<Customer?>
 
+    // Retrieves all customers stored in the database.
+    @Query("SELECT * FROM customers")
+    fun getAll(): Flow<List<Customer>>
+
     // Returns a list of customers who currently owe money, calculating credit sales minus payments.
     @Query("""
         SELECT 

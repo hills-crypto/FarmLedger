@@ -20,7 +20,8 @@ data class ProjectDetailsUiState(
     val profit: Double = 0.0,
     val animalsRemaining: Int = 0,
     val transactions: List<LedgerEntry> = emptyList(),
-    val nextReminder: Reminder? = null
+    val nextReminder: Reminder? = null,
+    val customers: Map<Long, String> = emptyMap()
 )
 
 // Manages business logic, calculations, and state streams for a specific project details screen.
@@ -29,7 +30,7 @@ class ProjectDetailsViewModel(
     private val projectId: Long
 ) : ViewModel() {
 
-    // Reactive state flow that combines project details, financial totals, remaining counts, and reminders.
+    // Reactive state flow that combines project details, financial totals, remaining counts, reminders, and customer names.
     val uiState: StateFlow<ProjectDetailsUiState> = combine(
         combine(
             repository.getProjectById(projectId),
@@ -44,12 +45,14 @@ class ProjectDetailsViewModel(
             repository.getRemindersForProject(projectId)
         ) { quantitySold, transactions, reminders ->
             Triple(quantitySold, transactions, reminders)
-        }
-    ) { (project, totalExpenses, totalSales), (quantitySold, transactions, reminders) ->
+        },
+        repository.getAllCustomers()
+    ) { (project, totalExpenses, totalSales), (quantitySold, transactions, reminders), customersList ->
         val profit = totalSales - totalExpenses
         val initialQuantity = project?.quantity ?: 0
         val remaining = (initialQuantity - quantitySold).coerceAtLeast(0)
         val nextReminder = reminders.firstOrNull { !it.isDone }
+        val customerMap = customersList.associate { it.id to it.name }
 
         ProjectDetailsUiState(
             project = project,
@@ -58,7 +61,8 @@ class ProjectDetailsViewModel(
             profit = profit,
             animalsRemaining = remaining,
             transactions = transactions,
-            nextReminder = nextReminder
+            nextReminder = nextReminder,
+            customers = customerMap
         )
     }.stateIn(
         scope = viewModelScope,

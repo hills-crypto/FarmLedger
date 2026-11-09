@@ -150,7 +150,10 @@ fun AddProjectScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = onCancel,
+                    onClick = {
+                        viewModel.reset()
+                        onCancel()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Cancel")

@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.farmledger.data.EntryKind
 import com.example.farmledger.data.LedgerEntry
+import com.example.farmledger.data.PaymentType
 
 // Renders the detailed metrics, reminder alerts, and transaction history for a single project.
 @OptIn(ExperimentalMaterial3Api::class)
@@ -202,6 +203,7 @@ fun ProjectDetailsScreen(
                     items(uiState.transactions, key = { it.id }) { entry ->
                         TransactionRow(
                             entry = entry,
+                            customersMap = uiState.customers,
                             onDelete = { transactionToDelete = entry }
                         )
                     }
@@ -215,11 +217,20 @@ fun ProjectDetailsScreen(
 @Composable
 private fun TransactionRow(
     entry: LedgerEntry,
+    customersMap: Map<Long, String>,
     onDelete: () -> Unit
 ) {
     val isExpense = entry.kind == EntryKind.EXPENSE
     val amountColor = if (isExpense) Color(0xFFB3261E) else Color(0xFF2E6B3A)
-    val displayCategory = if (isExpense) entry.category else "Sold ${entry.quantity}"
+    val displayKind = if (isExpense) "Expense" else "Sale"
+    val displayCategory = if (isExpense) {
+        entry.category
+    } else if (entry.paymentType == PaymentType.CREDIT) {
+        val customerName = entry.customerId?.let { customersMap[it] } ?: ""
+        if (customerName.isNotBlank()) "Credit – $customerName" else "Credit"
+    } else {
+        "Sold ${entry.quantity}"
+    }
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -232,7 +243,7 @@ private fun TransactionRow(
             Column(modifier = Modifier.weight(1f)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = if (isExpense) "EXPENSE" else "SALE",
+                        text = displayKind,
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = amountColor

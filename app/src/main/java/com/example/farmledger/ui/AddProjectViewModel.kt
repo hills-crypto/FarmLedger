@@ -40,6 +40,19 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
     var isSaving by mutableStateOf(false)
         private set
 
+    // Resets all form fields, errors, and saving state back to default values.
+    fun reset() {
+        name = ""
+        quantity = ""
+        budget = ""
+        type = ProjectType.POULTRY
+        startDate = System.currentTimeMillis()
+        nameError = null
+        quantityError = null
+        budgetError = null
+        isSaving = false
+    }
+
     // Updates the input name value and clears its error message.
     fun updateName(input: String) {
         name = input
@@ -104,6 +117,7 @@ class AddProjectViewModel(private val repository: FarmRepository) : ViewModel() 
                     budget = parsedBudget!!
                 )
                 repository.saveProjectWithReminders(project)
+                reset()
                 onSaved()
             } finally {
                 isSaving = false

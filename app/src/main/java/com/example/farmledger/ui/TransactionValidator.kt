@@ -17,6 +17,9 @@ data class TransactionValidationResult(
         get() = amountError == null && categoryError == null && dateError == null && customerNameError == null && quantityError == null
 }
 
+// Calculates calendar day index from epoch milliseconds for day-level date comparison.
+fun dayIndex(ms: Long): Long = ms / 86_400_000L
+
 // Pure function that validates transaction input fields against project constraints and business rules.
 fun validateTransaction(
     kind: EntryKind,
@@ -48,8 +51,8 @@ fun validateTransaction(
         categoryErr = "Please choose an expense category."
     }
 
-    // Date validation
-    if (dateMs > currentDateMs || dateMs < projectStartDateMs) {
+    // Date validation by calendar day index
+    if (dayIndex(dateMs) > dayIndex(currentDateMs) || dayIndex(dateMs) < dayIndex(projectStartDateMs)) {
         dateErr = "Date must be between the project start date and today."
     }
 

@@ -51,6 +51,7 @@ fun AddTransactionScreen(
     onSaved: () -> Unit,
     onCancel: () -> Unit,
     viewModel: AddTransactionViewModel = viewModel(
+        key = "add-tx-$projectId",
         factory = AppViewModelProvider.addTransactionFactory(projectId)
     )
 ) {
@@ -228,7 +229,10 @@ fun AddTransactionScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = onCancel,
+                    onClick = {
+                        viewModel.reset()
+                        onCancel()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Cancel")

@@ -11,8 +11,6 @@ import com.example.farmledger.data.EntryKind
 import com.example.farmledger.data.FarmRepository
 import com.example.farmledger.data.LedgerEntry
 import com.example.farmledger.data.PaymentType
-import com.example.farmledger.data.Project
-import com.example.farmledger.data.ProjectType
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -54,6 +52,21 @@ class AddTransactionViewModel(
 
     var isSaving by mutableStateOf(false)
         private set
+
+    // Resets form inputs and error messages back to default state.
+    fun reset() {
+        kind = EntryKind.EXPENSE
+        category = "Feed"
+        amount = ""
+        date = System.currentTimeMillis()
+        note = ""
+        quantity = "1"
+        paymentType = PaymentType.CASH
+        customerName = ""
+        customerPhone = ""
+        validationErrors = TransactionValidationResult()
+        isSaving = false
+    }
 
     // Updates transaction kind (Expense or Sale) and adjusts default categories.
     fun updateKind(newKind: EntryKind) {
@@ -157,6 +170,7 @@ class AddTransactionViewModel(
                 )
 
                 repository.insertTransaction(entry)
+                reset()
                 onSaved()
             } finally {
                 isSaving = false

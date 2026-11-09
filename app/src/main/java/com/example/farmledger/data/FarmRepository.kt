@@ -72,6 +72,9 @@ class FarmRepository(
     // Retrieves a customer by ID.
     fun getCustomerById(id: Long): Flow<Customer?> = customerDao.getById(id)
 
+    // Retrieves all registered customers.
+    fun getAllCustomers(): Flow<List<Customer>> = customerDao.getAll()
+
     // Retrieves customers who currently have an outstanding credit balance.
     fun getCustomersWithBalance(): Flow<List<CustomerBalance>> = customerDao.customersWithBalance()
 
